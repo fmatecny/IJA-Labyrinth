@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Labyrint" default="all" basedir=".">
+    <property name="src-dir" location="src" />
+    <property name="build-dir" location="build" />
+    <property name="doc-dir" location="doc" />
+    <property name="dest-client-dir" location="dest-client" /> 
+    <property name="lib-dir" location="lib" />
+    
+    <!-- Download image which we need.-->
+    <target name="download" >
+	<exec Command="${lib-dir}/get-libs.sh" />
+    </target>
+
+    <!-- Javadoc generate.-->
+    <target name="doc">
+	    <javadoc sourcepath="src" destdir="doc" />
+     </target>
+
+    <!-- Compile program.-->
+    <target name="compiling" depends="doc, download">
+        <javac srcdir="${src-dir}" includeantruntime="false" destdir="${build-dir}" />
+    </target>
+ 
+    <!-- Create jar.-->
+    <target name="compile" depends="compiling">       
+        <manifest file="manifest.mf">
+            <attribute name="Main-Class"
+                value="ija/Labyrinth/Game" />
+        </manifest>
+    	<jar destfile="${dest-client-dir}/ija2015-client.jar" manifest="manifest.mf" basedir="${build-dir}">
+        </jar>
+    </target>	
+
+    <!-- Run program.-->
+    <target name="run">
+	    <exec Command="chmod +x ${dest-client-dir}/ija2015-client.jar" />
+            <exec Command="${dest-client-dir}/ija2015-client.jar" />
+    </target>
+
+    <!-- Clean classes,jar, documentation-->
+    <target name="clean">
+        <delete dir="${build-dir}"/>
+	    <delete dir="${dest-client-dir}"/>
+        <delete dir="${doc-dir}"/>
+        <mkdir dir="${doc-dir}"/>
+        <mkdir dir="${build-dir}"/>
+        <mkdir dir="${dest-client-dir}"/>
+    </target>
+</project>
